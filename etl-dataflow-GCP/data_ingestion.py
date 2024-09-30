@@ -6,7 +6,8 @@ from apache_beam.options.pipeline_options import PipelineOptions
 
 import os
 # set GOOGLE_APPLICATION_CREDENTIALS environment variable in Python code to the path key.json file
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/cloudaianalytics/sravanitest-bacb6ae36014.json"
+#os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/cloudaianalytics/sravanitest-bacb6ae36014.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/Users/shabivictor/Downloads/shabgcp-f7bdbb520a2d.json"
 
 class DataIngestion:
     """A helper class which contains the logic to translate the file into
@@ -38,7 +39,7 @@ class DataIngestion:
         values = re.split(",",
                           re.sub('\r\n', '', re.sub('"', '', string_input)))
         row = dict(
-            zip(('state', 'gender', 'year', 'name', 'number', 'created_date'),
+            zip(('edition', 'report_type', 'measure_name', 'state_name', 'subpopulation', 'value', 'lower_ci', 'upper_ci', 'source', 'source_date'),
                 values))
         return row
 
@@ -51,14 +52,14 @@ def run(argv=None):
         '--input',
         dest='input',
         required=False,
-        help='Input file to read. This can be a local file or '
+        help='Input file to read. This can be a local file or'
         'a file in a Google Storage Bucket.',
-        default='gs://spls/gsp290/data_files/head_usa_names.csv')
+        default='gs://files_0001/d1.csv')
     parser.add_argument('--output',
                         dest='output',
                         required=False,
                         help='Output BQ table to write results to.',
-                        default='lake.usa_names')
+                        default='Dataset_001.tbl_001')
                         
     # Parse arguments from the command line.
     known_args, pipeline_args = parser.parse_known_args(argv)
@@ -73,8 +74,7 @@ def run(argv=None):
      | 'Write to BigQuery' >> beam.io.Write(
          beam.io.BigQuerySink(
              known_args.output,
-             schema='state:STRING,gender:STRING,year:STRING,name:STRING,'
-             'number:STRING,created_date:STRING',
+             schema='edition:INTEGER, report_type:STRING, measure_name:STRING, state_name:STRING, subpopulation:STRING, value:FLOAT64, lower_ci:FLOAT64, upper_ci:FLOAT64, source:STRING, source_date:STRING',
              create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
              write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE)))
     p.run().wait_until_finish()
