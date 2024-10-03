@@ -1,6 +1,5 @@
 import apache_beam as beam 
 
-
 p1= beam.Pipeline()
 
 ahr      = (p1
@@ -11,3 +10,5 @@ ahr      = (p1
            #| 'Write to text'>> beam.io.WriteToText('d2.csv'))
 
 p1.run()
+
+ 
