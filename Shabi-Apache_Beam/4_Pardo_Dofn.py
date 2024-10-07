@@ -14,7 +14,7 @@ with beam.Pipeline() as pipeline:
                 | "read from text">> beam.io.ReadFromText("/Users/shabivictor/Desktop/Dataflow/d1.csv", skip_header_lines= True)
                 | "spliting the record" >> beam.ParDo(SplitRow()))
   
-''''''
+'''
   count_data = (input_data
                 |"filtering the data with PASS" >> beam.Filter(lambda record : record[5]=="FAIL"))
   
@@ -24,3 +24,4 @@ with beam.Pipeline() as pipeline:
   
   output_data = (count_data
                  | "Write to Text" >> beam.io.WriteToText("result/fail_data"))
+'''
